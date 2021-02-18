@@ -1,60 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ametta <ametta@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/18 14:57:37 by ametta            #+#    #+#             */
+/*   Updated: 2021/02/18 16:01:50 by ametta           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	i;
-	size_t	j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = (char*)malloc((ft_strlen(s1) + (ft_strlen(s2))) * sizeof(char));
-	if (str == 0)
-		return (NULL);
-	while (s1[i] != 0)
-		str[j++] = s1[i++];
-	i = 0;
-	while (s2[i] != 0)
-		str[j++] = s2[i++];
-	str[j] = s2[i];
-	return (str);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t i;
-
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
 
 char    *ft_strchr(const char *s, int c)
 {
-    size_t i;
+    int i;
 
+    i = 0;
     while (s[i] != c && s[i] != '\0')
         i++;
     if (s[i] == c)
-        return ((char*)s + i);
-    return (NULL);
+        return((char *)s + i);
+    return(NULL);
 }
 
-char	*ft_strdup(const char *s1)
+char    *ft_strdup(const char *s1)
 {
-	char	*cpy;
-	size_t	i;
+    int i;
+    char    *cpy;
 
-	i = 0;
-	cpy = (char*)malloc((ft_strlen(s1) + 1) * sizeof(char));
-	if (!cpy)
-		return (NULL);
-	while (s1[i] != 0)
-	{
-		cpy[i] = s1[i];
-		i++;
-	}
-	cpy[i] = 0;
-	return (cpy);
+    i = 0;
+    while (s1[i++] != '\0')
+        ;
+    if (!(cpy = (char *)malloc(sizeof(char) * (i + 1))))
+        return(NULL);
+    while (i-- >= 0)
+        cpy[i] = s1[i];
+    return(cpy);
+}
+
+char    *ft_strjoin(char const *str1, char const *str2)
+{
+    int i;
+    int j;
+    char    *cat;
+
+    i = j = 0;
+    while (str1[i] != '\0')
+        i++;
+    while (str2[j] != '\0')
+        j++;
+    if (!(cat = (char *)malloc(sizeof(char) * (i + j + 1))))
+        return(NULL);
+    while (j-- >= 0)
+        cat[i + j] = str2[j];
+    while (i-- >= 0)
+        cat[i] = str1[i];
+    return(cat);
 }

@@ -1,13 +1,14 @@
-#include "get_next_line.h"
+#include <stdlib.h>
+#include <fcntl.h>
 
-int main()
+int get_next_line(int fd, char **line);
+
+int main (void)
 {
-    int fd;
+    int fd      =   open("text", O_RDONLY, 0);
+    int exit    =   0;
 
-    fd = open("ciao.txt", O_RDONLY, 0);
-    int c;
-    while (get_next_line(fd) != 0)
+    while ((exit = get_next_line(fd, **line)) == 0 || exit == -1)
         ;
-    close(fd);
     return 0;
 }

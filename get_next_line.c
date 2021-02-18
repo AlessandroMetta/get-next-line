@@ -1,39 +1,89 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ametta <ametta@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/17 10:52:07 by ametta            #+#    #+#             */
+/*   Updated: 2021/02/18 16:01:52 by ametta           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-int ft_read_line(char **p_el, char **rescue, int fd, int size)
+int ft_read_line(char **p_el, char **rescue, int fd, int buff_size)
 {
+    char    *line_red;
+    char    *temp;
+    int                 return_value;
 
+    return_value = buff_size;
+    while (!(*p_el = ft_strchr(*rescue, '\n')) && return_value == buff_size)
+    {
+        if (!(line_red = (char *)malloc(sizeof(char) * (buff_size + 1))))
+            return(-1);
+        if ((return_value = read(fd, line_red, buff_size)) < 0)
+        {
+            free(line_red);
+            return(-1);
+        }
+        line_red[return_value] = '\0';
+        if (!(temp = ft_strjoin(*rescue, line_red)))
+        {
+            free(line_red);
+            return(-1);
+        }
+        free(*rescue);
+        free(line_red);
+        *rescue = temp;
+    }
+    return(return_value);
 }
 
-int ft_return_value(char **p_el , char **rescue)
+int ft_return(char **p_el, char **rescue)
 {
-
+    char *temp;
+    if (*p_el)
+    {
+        if (!(temp = ft_strdup(*p_el + 1)))
+        {
+            free(*rescue);
+            return(-1);
+        }
+        free(*rescue);
+        *rescue = temp;
+        return (1);
+    }
+    free(*rescue);
+    *rescue = NULL;
+    return(0);
 }
 
 int get_next_line(int fd, char **line)
 {
-    static char		*rescue[256];
-	char			*p_el;
+    static char     *rescue[256];
+    char            *p_el;
 
+    if (fd < 0 || fd > 255 || !line || BUFF_SIZE <= 0)
+        return(-1);
     p_el = NULL;
-	if (fd < 0 || fd > 256 || BUFFER_SIZE <= 0 || !line)
-		return (-1);
-    if (!rescue[fd])
-	{
-		if (!(rescue[fd] = ft_strdup("")))
-			return (-1);
-	}
-    if ((ft_read_line(&p_el, &rescue[fd], fd, BUFFER_SIZE)) < 0)
-	{
-		free(rescue[fd]);
-		return (-1);
-	}
+    if (!(rescue[fd]))
+    {
+        if (!(rescue[fd] = ft_strdup("")))
+            return(-1);
+    }
+    if ((ft_read_line(&p_el, &rescue[fd], fd, BUFF_SIZE)) < 0)
+    {
+        free(rescue[fd]);
+        return(-1);
+    }
     if (p_el)
         *p_el = '\0';
     if (!(*line = ft_strdup(rescue[fd])))
-	{
-		free(rescue[fd]);
-		return (-1);
-	}
-	return (ft_return_value(&p_el, &rescue[fd]));
+    {
+        free(rescue[fd]);
+        return(-1);
+    }
+    return(ft_return(&p_el, &rescue[fd]));
 }
