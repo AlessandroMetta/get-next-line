@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ametta <ametta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/17 10:52:07 by ametta            #+#    #+#             */
-/*   Updated: 2021/02/18 16:22:43 by ametta           ###   ########.fr       */
+/*   Created: 2021/02/18 16:21:35 by ametta            #+#    #+#             */
+/*   Updated: 2021/02/18 16:22:41 by ametta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int ft_read_line(char **p_el, char **rescue, int fd, int buff_size)
 {
