@@ -5,56 +5,61 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ametta <ametta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/18 14:57:37 by ametta            #+#    #+#             */
-/*   Updated: 2021/02/18 16:01:50 by ametta           ###   ########.fr       */
+/*   Created: 2021/02/19 11:42:43 by ametta            #+#    #+#             */
+/*   Updated: 2021/02/19 12:52:38 by ametta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char    *ft_strchr(const char *s, int c)
+char	ft_strchr(const char *str, int needle)
 {
-    int i;
+	int	count;
 
-    i = 0;
-    while (s[i] != c && s[i] != '\0')
-        i++;
-    if (s[i] == c)
-        return((char *)s + i);
-    return(NULL);
+	count = 0;
+	while (str[count] != '\0' && str[count] != needle)
+		count++;
+	if (str[count] == needle)
+		return ((char *)str + count);
+	return (NULL);
 }
 
-char    *ft_strdup(const char *s1)
+char	*ft_strdup(const char *str)
 {
-    int i;
-    char    *cpy;
+	int		count;
+	char	*cpy;
 
-    i = 0;
-    while (s1[i++] != '\0')
-        ;
-    if (!(cpy = (char *)malloc(sizeof(char) * (i + 1))))
-        return(NULL);
-    while (i-- >= 0)
-        cpy[i] = s1[i];
-    return(cpy);
+	count = 0;
+	while (str[count] != '\0')
+		count++;
+	cpy = (char *)malloc(sizeof(char) * count);
+	while (count >= 0)
+	{
+		cpy[count] = str[count];
+		count--;
+	}
+	return (cpy);
 }
 
-char    *ft_strjoin(char const *str1, char const *str2)
+char	*ft_strjoin(const char *str1, const char *str2)
 {
-    int i;
-    int j;
-    char    *cat;
+	int		count1;
+	int		count2;
+	char	*cpy;
 
-    i = j = 0;
-    while (str1[i] != '\0')
-        i++;
-    while (str2[j] != '\0')
-        j++;
-    if (!(cat = (char *)malloc(sizeof(char) * (i + j + 1))))
-        return(NULL);
-    while (j-- >= 0)
-        cat[i + j] = str2[j];
-    while (i-- >= 0)
-        cat[i] = str1[i];
-    return(cat);
+	count1 = 0;
+	count2 = 0;
+	while (str1[count1] != '\0')
+		count1++;
+	while (str2[count2] != '\0')
+		count2++;
+	cpy = (char *)malloc(sizeof(char) * count1 + count2);
+	while (count2 >= 0)
+	{
+		cpy[count1 + count2] = str2[count2];
+		count2--;
+	}
+	while (count1-- >= 0)
+		cpy[count1] = str1[count1];
+	return (cpy);
 }
