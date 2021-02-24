@@ -3,88 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ametta <ametta@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ametta <ametta@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/19 10:47:46 by ametta            #+#    #+#             */
-/*   Updated: 2021/02/19 12:50:09 by ametta           ###   ########.fr       */
+/*   Created: 2021/02/24 16:28:54 by ametta            #+#    #+#             */
+/*   Updated: 2021/02/24 16:28:57 by ametta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_readline(char **bef_read, int fd, char **p_endl, int buff_size)
+int		ft_reading(char **end_line, char **buffer, int fd, int b_size)
 {
-	char	*new_read;
+	char	*buf;
+	int		ret;
 	char	*temp;
-	int		ret_val;
 
-	ret_val = buff_size;
-	while (!(p_endl = ft_strchr(*bef_read, '\n')) && ret_val == buff_size)
+	ret = b_size;
+	while (!(*end_line = ft_strchr(*buffer, '\n')) && ret == b_size)
 	{
-		if (!(new_read = (char *)malloc(sizeof(char) * buff_size + 1)))
+		if (!(buf = (char *)malloc(sizeof(char) * (b_size + 1))))
 			return (-1);
-		if ((ret_val = read(fd, new_read, buff_size)) < 0)
+		if ((ret = read(fd, buf, b_size)) < 0)
 		{
-			free(new_read);
+			free(buf);
 			return (-1);
 		}
-		new_read[ret_val] = '\0';
-		if (!(temp = ft_strjoin(*bef_read, new_read)))
+		buf[ret] = '\0';
+		if (!(temp = ft_strjoin(*buffer, buf)))
 		{
-			free(new_read);
+			free(buf);
 			return (-1);
 		}
-		free(*bef_read);
-		free(new_read);
-		*bef_read = temp;
+		free(buf);
+		free(*buffer);
+		*buffer = temp;
 	}
-	return (ret_val);
+	return (ret);
 }
 
-int	ft_return(char **p_endl, char **final_read)
+int		ft_result(char **end_line, char **buffer)
 {
 	char	*temp;
 
-	if (*p_endl)
+	if (*end_line)
 	{
-		if (!(temp = ft_strdup(p_endl + 1)))
+		if (!(temp = ft_strdup(*end_line + 1)))
 		{
-			free(*final_read);
+			free(*buffer);
 			return (-1);
 		}
-		free(*final_read);
-		*final_read = temp;
+		free(*buffer);
+		*buffer = temp;
 		return (1);
 	}
-	free(*final_read);
-	*final_read = NULL;
+	free(*buffer);
+	*buffer = NULL;
 	return (0);
 }
 
-int	get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	char	*rescue[256];
-	char	*p_endl;
+	static char		*buffer[256];
+	char			*end_line;
 
-	if (fd < 0 || fd > 255 || !line || BUFF_SIZE <= 0)
+	if (fd < 0 || fd > 256 || BUFFER_SIZE <= 0 || !line)
 		return (-1);
-	p_endl = NULL;
-	if (!(rescue[fd]))
+	end_line = NULL;
+	if (!buffer[fd])
 	{
-		if (!(rescue[fd] = ft_strdup("")))
+		if (!(buffer[fd] = ft_strdup("")))
 			return (-1);
 	}
-	if ((ft_readline(&rescue[fd], fd, &p_endl, BUFF_SIZE)) < 0)
+	if ((ft_reading(&end_line, &buffer[fd], fd, BUFFER_SIZE)) < 0)
 	{
-		free(rescue[fd]);
+		free(buffer[fd]);
 		return (-1);
 	}
-	if (p_endl)
-		p_endl = '\0';
-	if (!(line = ft_strdup(rescue[fd])))
+	if (end_line)
+		*end_line = '\0';
+	if (!(*line = ft_strdup(buffer[fd])))
 	{
-		free(rescue[fd]);
+		free(buffer[fd]);
 		return (-1);
 	}
-	return (ft_return(&p_endl, &rescue[fd]));
+	return (ft_result(&end_line, &buffer[fd]));
 }
